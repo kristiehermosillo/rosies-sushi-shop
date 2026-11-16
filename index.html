@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffe7b9">
+<title>Rosie's Sushi Shop 🍣</title>
+<style>
+  :root { --ink:#294852; --muted:#69818a; --cream:#fffaf0; --pink:#ffd4de; --rose:#e36c94; --mint:#d9f3e4; --yellow:#ffe7ad; --lilac:#eee3ff; --sky:#c8eaf8; }
+  * {box-sizing:border-box} body {margin:0;background:linear-gradient(160deg,#fff0d7 0%,#fce8ee 42%,#e6f6ec 100%);color:var(--ink);font-family:ui-rounded,"Trebuchet MS", "Arial Rounded MT Bold",system-ui,sans-serif;}
+  button{font:inherit;cursor:pointer;touch-action:manipulation} button:focus-visible{outline:3px solid #eb548d;outline-offset:3px} button:disabled {cursor:not-allowed;filter:grayscale(.38);opacity:.46;transform:none!important}
+  .game{max-width:1080px;margin:0 auto;padding:17px 18px 30px;min-height:740px}
+  .header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+  .logo{display:flex;gap:12px;align-items:center}.logo-icon{width:60px;height:60px;border-radius:18px;background:#fff;display:grid;place-items:center;font-size:35px;transform:rotate(-5deg);box-shadow:0 5px 0 #e9cad1}
+  h1{font-size:clamp(25px,4vw,38px);letter-spacing:-1.4px;margin:0;line-height:1.06} .subtitle{margin:4px 0 0;color:#777f78;font-size:13px;font-weight:700}
+  .scorebar{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.score,.tinybutton{border:2px solid rgba(41,72,82,.12);background:white;padding:9px 13px;border-radius:16px;font-weight:900;box-shadow:0 4px 0 rgba(41,72,82,.08);font-size:14px}.tinybutton{color:var(--ink)}
+  .modebar{display:flex;background:#fff5ea;border:3px solid #fff;padding:4px;border-radius:17px;gap:5px;margin-bottom:15px;max-width:420px;box-shadow:0 5px 0 #e9dccc}
+  .mode{flex:1;border:0;background:transparent;border-radius:12px;padding:11px 12px;color:#6f7880;font-weight:1000;font-size:15px}.mode.active{background:#ffaac3;color:#653c4b;box-shadow:0 3px 0 #e890a9}
+  .order-area{display:grid;grid-template-columns:235px 1fr;gap:13px;align-items:stretch;margin-bottom:15px}
+  .customer-card,.ticket,.station,.pantry{border:3px solid #fff;border-radius:25px;box-shadow:0 6px 0 rgba(41,72,82,.07)}
+  .customer-card{min-height:166px;padding:12px 16px;background:#cfeef5;text-align:center;position:relative;overflow:hidden}
+  .customer-card:before,.customer-card:after{content:"✦";position:absolute;color:#74c6db;font-size:28px;left:17px;top:10px}.customer-card:after{left:auto;right:14px;top:56px;font-size:22px}
+  .customer-face{font-size:70px;line-height:1.1;filter:drop-shadow(0 6px 1px #b7e0e8);animation:float 2.8s ease-in-out infinite}.customer-name{font-size:20px;font-weight:1000;margin-top:4px}
+  .customer-caption{font-size:12px;font-weight:800;color:#507c8a;margin-top:2px}
+  .ticket{padding:17px 21px;background:var(--cream);position:relative;overflow:hidden}
+  .ticket:after{content:"";position:absolute;bottom:-12px;right:-15px;width:95px;height:95px;border:8px dotted #ffe6bb;border-radius:50%;opacity:.7}
+  .ticket-top{color:#be6a73;font-size:12px;font-weight:1000;letter-spacing:1.7px;margin-bottom:7px}.ticket-title{font-size:22px;font-weight:1000;letter-spacing:-.3px;line-height:1.2;margin-bottom:10px}
+  .order-pills{display:flex;gap:7px;flex-wrap:wrap;position:relative;z-index:1}.pill{background:#f7e5ec;border:2px solid white;border-radius:100px;padding:7px 11px;font-weight:900;font-size:14px}.pill.sauce{background:#fff0b7}
+  .ticket-quote{color:#877c75;margin-top:10px;font-weight:800;font-style:italic;font-size:13px;position:relative;z-index:1}
+  .station{background:#fcf9ef;padding:16px 18px 19px;margin-bottom:15px;position:relative}
+  .station-title{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:17px;font-weight:1000;margin-bottom:12px}.step{font-size:12px;color:#7c7a6e;background:#f5ebd6;padding:7px 10px;border-radius:20px}
+  .mat{min-height:225px;border-radius:20px;border:8px solid #e6c08f;background:repeating-linear-gradient(90deg,#f2d7ad 0,#f2d7ad 13px,#e9c799 13px,#e9c799 16px);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:23px}
+  .mat:before{content:"";position:absolute;inset:8px;border-radius:12px;border:2px dashed #dfb687;pointer-events:none}
+  .mat-icon{position:absolute;left:12px;top:9px;font-size:19px;opacity:.65}.mat-icon.right{left:auto;right:11px;top:auto;bottom:6px}
+  .nori{width:min(400px,90%);min-height:117px;background:#284b46;border-radius:9px;border:8px solid #20413d;box-shadow:0 8px 0 #ae8c64;transform:rotate(-3deg);display:flex;align-items:stretch;justify-content:center;overflow:hidden}
+  .rice{background:radial-gradient(circle at 14px 9px,#f0f0e9 2px,transparent 3px),#fffefa;background-size:20px 18px;width:100%;margin:8px;border-radius:5px;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px}
+  .filling-face{font-size:clamp(32px,5vw,48px);filter:drop-shadow(1px 3px 0 rgba(0,0,0,.09))}.rice-placeholder{color:#a0a39f;text-align:center;font-size:15px;font-weight:900}
+  .rolled{width:min(420px,94%);height:118px;border-radius:70px;background:linear-gradient(180deg,#496f58,#214940 45%,#183c38 65%,#49705b);border:5px solid #245548;box-shadow:0 12px 0 rgba(124,91,50,.23);position:relative;animation:pop .36s cubic-bezier(.2,1.6,.5,1)}
+  .rolled:before{content:"";position:absolute;left:-12px;top:9px;width:92px;height:92px;border-radius:100%;background:radial-gradient(circle,#f3ad79 0 16%,#fffaf1 17% 64%,#254d43 66% 100%);border:3px solid #244b42;box-shadow:inset 0 0 0 2px #183a37}
+  .rolled:after{content:"";position:absolute;right:-12px;top:9px;width:92px;height:92px;border-radius:100%;background:radial-gradient(circle,#f3ad79 0 16%,#fffaf1 17% 64%,#254d43 66% 100%);border:3px solid #244b42}
+  .roll-band{position:absolute;left:40%;top:0;bottom:0;width:23px;background:#749687;opacity:.65;transform:skewX(-7deg)}
+  .sushi-tray{display:grid;grid-template-columns:repeat(3,86px);gap:9px 14px;justify-items:center;transform:rotate(-3deg);animation:pop .36s cubic-bezier(.2,1.6,.5,1);position:relative;z-index:1}
+  .piece{height:78px;width:78px;border-radius:50%;background:#fffef9;border:10px solid #284c40;box-shadow:0 5px 0 #b18e6f,inset 0 0 0 4px #e9e5d8;display:flex;align-items:center;justify-content:center;position:relative}
+  .piece-fillings{display:flex;align-items:center;justify-content:center;letter-spacing:-12px;padding-right:10px;position:relative;z-index:1;white-space:nowrap}.piece-fillings span{font-size:25px;filter:drop-shadow(1px 2px 0 #fff)}.piece-fillings span:only-child{font-size:31px}
+  .piece .drizzle{position:absolute;z-index:3;inset:10px -1px auto;height:16px;border-top:5px wavy #a72;transform:rotate(-22deg);border-radius:50%;pointer-events:none}.drizzle.soy{border-top:6px solid #7f4c27}.drizzle.mayo{border-top:6px solid #f2a26e}.drizzle.honey{border-top:6px solid #d6a520}.drizzle.rainbow{border-top:6px dotted #d66cb3}
+  .piece:nth-child(2),.piece:nth-child(5){transform:rotate(13deg)}.piece:nth-child(3){transform:rotate(-10deg)}
+  .hint{min-height:33px;text-align:center;font-size:14px;font-weight:900;color:#6c746d;margin:12px 0 6px}
+  .actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.action{border:0;border-radius:16px;padding:12px 18px;font-weight:1000;font-size:16px;box-shadow:0 5px 0 rgba(40,55,51,.17);transition:transform .1s,filter .12s;color:#36505a}.action:not(:disabled):active,.ingredient:not(:disabled):active{transform:translateY(3px);box-shadow:0 2px 0 rgba(40,55,51,.15)}
+  .action.roll{background:#b0dfd0}.action.slice{background:#e0d0fb}.action.serve{background:#ffad73;color:#603b25}.action.next{background:#ffb4cf}.action.clear{background:#fff;border:2px solid #e9ddca;padding:10px 13px;font-size:13px}
+  .pantry{background:#fffdf8;padding:17px 18px 18px}.pantry-header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px}.pantry-header h2{font-size:18px;margin:0;letter-spacing:-.4px}.mini-hint{color:#83908b;font-weight:800;font-size:12px}
+  .ingredient-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-bottom:16px}.ingredient{border:2px solid #eee6d8;background:#fff;border-radius:15px;min-height:87px;padding:8px 3px;color:var(--ink);box-shadow:0 4px 0 #eee6d8;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;transition:transform .1s}.ingredient .emoji{font-size:35px;line-height:1}.ingredient .name{font-weight:1000;font-size:11px;line-height:1.2}.ingredient.selected{background:#ffebaa;border-color:#f3c979;box-shadow:0 4px 0 #eccb80}.ingredient .check{font-size:11px;position:absolute;top:2px;right:5px}.ingredient{position:relative}
+  .sauces{display:flex;flex-wrap:wrap;gap:8px}.sauce-button{border:2px solid #eaddd1;background:#fff;border-radius:14px;padding:10px 12px;font-weight:900;font-size:12px;box-shadow:0 3px 0 #eaddd1;color:var(--ink)}.sauce-button.selected{border-color:#e4b4cb;background:#ffe3ee;box-shadow:0 3px 0 #e8aec6}
+  .feedback{margin-top:9px;text-align:center;min-height:22px;font-size:15px;font-weight:1000;color:#cd6286}.foot{margin:12px 3px 0;text-align:center;font-size:11px;font-weight:700;color:#8f9291}
+  .confetti-area{position:absolute;inset:0;pointer-events:none;z-index:10;overflow:hidden}.confetti{position:absolute;top:-20px;width:11px;height:17px;border-radius:4px;animation:fall 1.7s linear forwards}
+  @keyframes float{50%{transform:translateY(-5px) rotate(3deg)}}@keyframes pop{0%{transform:scale(.55) rotate(-9deg)}100%{transform:scale(1) rotate(0deg)}}@keyframes fall{to{transform:translateY(430px) rotate(640deg);opacity:0}}
+  @media(max-width:760px){.game{padding:12px 11px 26px}.logo-icon{width:51px;height:51px;font-size:29px}.score{font-size:12px;padding:8px 9px}.tinybutton{font-size:12px;padding:8px 9px}.order-area{grid-template-columns:145px 1fr;gap:8px}.customer-card{min-height:170px;padding:14px 5px}.customer-face{font-size:61px}.customer-name{font-size:17px}.ticket{padding:13px}.ticket-title{font-size:18px}.ticket-quote{font-size:12px}.pill{font-size:12px;padding:6px 8px}.ingredient-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.ingredient{min-height:76px}.ingredient .emoji{font-size:31px}.station{padding:12px}.mat{min-height:190px;padding:16px}.piece{width:61px;height:61px;border-width:8px}.sushi-tray{grid-template-columns:repeat(3,67px);gap:7px 8px}.piece-fillings span{font-size:20px}.piece-fillings span:only-child{font-size:24px}.actions{gap:6px}.action{font-size:14px;padding:12px 13px}.rolled{height:95px}.rolled:before,.rolled:after{height:75px;width:75px;top:5px}}
+  @media(max-width:410px){.order-area{grid-template-columns:118px 1fr}.customer-face{font-size:55px}.customer-name{font-size:15px}.ticket-title{font-size:16px}.ticket-quote{display:none}.pantry{padding:12px}.pantry-header h2{font-size:16px}.sauce-button{padding:9px 8px}.ingredient-grid{gap:6px}}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="sushi-game" class="game" aria-label="Rosie's Sushi Shop interactive game"></div>
+<script>
+(() => {
+  const root = document.getElementById('sushi-game');
+  const ingredients = [
+    {id:'salmon', name:'Salmon', icon:'🐟'}, {id:'avocado', name:'Avocado', icon:'🥑'},
+    {id:'cucumber', name:'Cucumber', icon:'🥒'}, {id:'shrimp', name:'Shrimp', icon:'🍤'},
+    {id:'mango', name:'Mango', icon:'🥭'}, {id:'carrot', name:'Carrot', icon:'🥕'},
+    {id:'strawberry', name:'Strawberry', icon:'🍓'}, {id:'cheese', name:'Cheese', icon:'🧀'}
+  ];
+  const sauces = [
+    {id:'none', name:'No sauce',icon:'🚫'}, {id:'soy',name:'Soy',icon:'🥢'},
+    {id:'mayo',name:'Spicy mayo',icon:'🌶️'}, {id:'honey',name:'Sweet glaze',icon:'🍯'},
+    {id:'rainbow',name:'Rainbow',icon:'🌈'}
+  ];
+  const customers = [
+    {name:'Mochi',icon:'🐼',line:'Make mine extra yummy!'},
+    {name:'Pip',icon:'🐸',line:'Ribbit! I am sooo hungry!'},
+    {name:'Lulu',icon:'🐰',line:'Can I have the cutest sushi?'},
+    {name:'Nori',icon:'🦊',line:'Surprise me, sushi chef!'},
+    {name:'Boba',icon:'🐻',line:'I brought my biggest appetite!'},
+    {name:'Tiki',icon:'🐱',line:'Meow! Make it fancy!'},
+    {name:'Sunny',icon:'🐯',line:'I love colorful food!'},
+    {name:'Kiwi',icon:'🐨',line:'Yay! Sushi time!'}
+  ];
+  const orders = [
+    {fillings:['avocado','cucumber'],sauce:'mayo'},
+    {fillings:['salmon','avocado'],sauce:'soy'},
+    {fillings:['shrimp','mango'],sauce:'honey'},
+    {fillings:['strawberry','cheese'],sauce:'rainbow'},
+    {fillings:['cucumber','carrot'],sauce:'soy'},
+    {fillings:['salmon','mango'],sauce:'mayo'},
+    {fillings:['shrimp','avocado'],sauce:'soy'},
+    {fillings:['mango','strawberry'],sauce:'rainbow'},
+    {fillings:['carrot','cheese'],sauce:'honey'},
+    {fillings:['salmon','cucumber'],sauce:'mayo'},
+    {fillings:['strawberry','avocado'],sauce:'rainbow'},
+    {fillings:['shrimp','carrot'],sauce:'honey'}
+  ];
+  const state = { mode:'orders',stage:'fill',fillings:[],sauce:'none',stars:0,served:0,orderIndex:0,customerIndex:0,feedback:'',sound:false };
+  function ing(id){return ingredients.find(x=>x.id===id)}
+  function sauce(id){return sauces.find(x=>x.id===id)}
+  function pickNext(){const prev=state.orderIndex;state.orderIndex=(prev+1+Math.floor(Math.random()*(orders.length-1)))%orders.length;state.customerIndex=(state.customerIndex+1+Math.floor(Math.random()*(customers.length-1)))%customers.length}
+  function resetDish(){state.stage='fill';state.fillings=[];state.sauce='none';state.feedback=''}
+  function playTone(type){if(!state.sound)return;try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;const ctx=new Audio();let pitches=type==='win'?[523,659,784]:[440];pitches.forEach((freq,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,ctx.currentTime+i*.11);g.gain.exponentialRampToValueAtTime(.075,ctx.currentTime+i*.11+.01);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+i*.11+.18);o.connect(g).connect(ctx.destination);o.start(ctx.currentTime+i*.11);o.stop(ctx.currentTime+i*.11+.2)});setTimeout(()=>ctx.close(),850)}catch(e){}}
+  function preview(){
+    if(state.stage==='fill')return `<div class="nori"><div class="rice">${state.fillings.length?state.fillings.map(id=>`<span class="filling-face" aria-label="${ing(id).name}">${ing(id).icon}</span>`).join(''):'<span class="rice-placeholder">✨ Pick your sushi fillings! ✨</span>'}</div></div>`;
+    if(state.stage==='rolled')return '<div class="rolled" role="img" aria-label="One big sushi roll"><div class="roll-band"></div></div>';
+    const pieces=Array.from({length:6},(_,i)=>`<div class="piece" role="img" aria-label="Sushi piece ${i+1}"><div class="piece-fillings">${state.fillings.map(id=>`<span>${ing(id).icon}</span>`).join('')}</div>${state.sauce!=='none'?`<div class="drizzle ${state.sauce}"></div>`:''}</div>`).join('');
+    return `<div class="sushi-tray">${pieces}</div>`;
+  }
+  function stepHint(){
+    if(state.stage==='served')return state.feedback;
+    if(state.stage==='fill')return state.fillings.length ? `Yum! ${state.fillings.length} filling${state.fillings.length!==1?'s':''} picked. Now tap “Roll it!”` : '👆 Tap the ingredients to put them on your sushi!';
+    if(state.stage==='rolled')return '🌯 Wow, a giant sushi roll! Tap “Slice it!”';
+    return '🎨 Choose a sauce, then tap “Serve!”';
+  }
+  function render(){
+    const free=state.mode==='free';const customer=customers[state.customerIndex];const order=orders[state.orderIndex];
+    let orderedPills=free?'<span class="pill">💡 Anything you dream up!</span>':order.fillings.map(id=>`<span class="pill">${ing(id).icon} ${ing(id).name}</span>`).join('')+`<span class="pill sauce">${sauce(order.sauce).icon} ${sauce(order.sauce).name}</span>`;
+    root.innerHTML=`
+      <header class="header"><div class="logo"><div class="logo-icon">🍣</div><div><h1>Rosie's Sushi Shop</h1><p class="subtitle">Little rolls. BIG imagination. ✨</p></div></div><div class="scorebar"><div class="score">⭐ <span aria-label="stars">${state.stars}</span> stars</div><div class="score">🍱 ${state.served} served</div><button class="tinybutton" data-action="sound" aria-pressed="${state.sound}">${state.sound?'🔊':'🔇'} Sound</button></div></header>
+      <div class="modebar" aria-label="Game mode"><button class="mode ${!free?'active':''}" data-action="mode-orders" aria-pressed="${!free}">🍽️ Take Orders</button><button class="mode ${free?'active':''}" data-action="mode-free" aria-pressed="${free}">🌈 Free Play</button></div>
+      <div class="order-area"><div class="customer-card"><div class="customer-face" aria-hidden="true">${free?'👩‍🍳':state.stage==='served'?'🥰':customer.icon}</div><div class="customer-name">${free?'Chef Rosie':customer.name}</div><div class="customer-caption">${free?'Your kitchen, your rules!':'Waiting for sushi!'}</div></div><div class="ticket"><div class="ticket-top">${free?'✨ IMAGINATION STATION':'🧾 CUSTOMER ORDER'}</div><div class="ticket-title">${free?'Make your own sushi magic!':'Can you make my favorite roll?'}</div><div class="order-pills">${orderedPills}</div><div class="ticket-quote">“${free?'Mix anything! The sillier, the better.':customer.line}”</div></div></div>
+      <section class="station"><div class="station-title"><span>👩‍🍳 Your sushi-making station</span><span class="step">${state.stage==='fill'?'STEP 1 · PICK':state.stage==='rolled'?'STEP 2 · ROLL':state.stage==='sliced'?'STEP 3 · DECORATE':'✨ ALL DONE'}</span></div><div class="mat" aria-label="Your sushi creation"><span class="mat-icon" aria-hidden="true">✿</span><span class="mat-icon right" aria-hidden="true">✿</span>${preview()}<div class="confetti-area" id="sushi-confetti"></div></div><div class="hint" aria-live="polite">${stepHint()}</div><div class="actions">${state.stage==='served'?`<button class="action next" data-action="next">${free?'✨ Make another!':'➡️ Next customer!'}</button>`:`<button class="action roll" data-action="roll" ${state.stage!=='fill'||state.fillings.length===0?'disabled':''}>🌯 Roll it!</button><button class="action slice" data-action="slice" ${state.stage!=='rolled'?'disabled':''}>🔪 Slice it!</button><button class="action serve" data-action="serve" ${state.stage!=='sliced'?'disabled':''}>💖 ${free?'Finish!':'Serve!'}</button><button class="action clear" data-action="clear">↺ Start over</button>`}</div></section>
+      <section class="pantry"><div class="pantry-header"><h2>🥑 Choose your fillings</h2><span class="mini-hint">Pick up to 3!</span></div><div class="ingredient-grid">${ingredients.map(x=>`<button class="ingredient ${state.fillings.includes(x.id)?'selected':''}" data-action="ingredient" data-id="${x.id}" aria-pressed="${state.fillings.includes(x.id)}" ${state.stage!=='fill'?'disabled':''}><span class="emoji">${x.icon}</span><span class="name">${x.name}</span>${state.fillings.includes(x.id)?'<span class="check">✅</span>':''}</button>`).join('')}</div><div class="pantry-header"><h2>🌈 Add a sauce</h2><span class="mini-hint">After slicing!</span></div><div class="sauces">${sauces.map(s=>`<button class="sauce-button ${state.sauce===s.id?'selected':''}" data-action="sauce" data-id="${s.id}" aria-pressed="${state.sauce===s.id}" ${state.stage!=='sliced'?'disabled':''}>${s.icon} ${s.name}</button>`).join('')}</div></section>
+      <p class="foot">Made for imaginative play 💕 • An original fan-made game, not affiliated with Toca Boca</p>`;
+  }
+  function confetti(){const area=root.querySelector('#sushi-confetti');if(!area)return;let colors=['#ed79a2','#64bd9e','#ffe27e','#b1a3eb','#7ec9e6','#ffb171'];for(let i=0;i<34;i++){const c=document.createElement('span');c.className='confetti';c.style.left=(Math.random()*100)+'%';c.style.background=colors[i%colors.length];c.style.animationDelay=(Math.random()*.55)+'s';c.style.animationDuration=(1.2+Math.random()*.75)+'s';area.appendChild(c)}setTimeout(()=>{if(area.isConnected)area.replaceChildren()},2300)}
+  root.addEventListener('click',e=>{
+    const b=e.target.closest('[data-action]');if(!b||b.disabled)return;
+    const a=b.dataset.action,id=b.dataset.id;
+    if(a==='sound'){state.sound=!state.sound;render();playTone('tap');return}
+    if(a==='mode-orders'||a==='mode-free'){state.mode=a==='mode-orders'?'orders':'free';resetDish();playTone('tap');render();return}
+    if(a==='clear'){resetDish();render();playTone('tap');return}
+    if(a==='ingredient'&&state.stage==='fill'){
+      if(state.fillings.includes(id))state.fillings=state.fillings.filter(x=>x!==id);
+      else if(state.fillings.length<3)state.fillings.push(id);
+      else{state.feedback='You can choose 3 fillings!';}
+      render();playTone('tap');return;
+    }
+    if(a==='roll'&&state.stage==='fill'&&state.fillings.length){state.stage='rolled';render();playTone('tap');return}
+    if(a==='slice'&&state.stage==='rolled'){state.stage='sliced';render();playTone('tap');return}
+    if(a==='sauce'&&state.stage==='sliced'){state.sauce=id;render();playTone('tap');return}
+    if(a==='serve'&&state.stage==='sliced'){
+      let reward=3;
+      if(state.mode==='orders'){
+        const order=orders[state.orderIndex];const count=state.fillings.filter(id=>order.fillings.includes(id)).length;
+        const exact=count===order.fillings.length&&state.fillings.length===order.fillings.length&&state.sauce===order.sauce;
+        reward=exact?3:count>=1?2:1;
+        state.feedback=exact?'🎉 PERFECT sushi! Your customer LOVES it! +3 ⭐':reward===2?'😍 Yummy surprise! +2 ⭐':'💗 Very creative! +1 ⭐';
+      }else state.feedback='🌈 WOW! You invented a new sushi! +3 ⭐';
+      state.stage='served';state.stars+=reward;state.served++;render();playTone('win');confetti();return;
+    }
+    if(a==='next'&&state.stage==='served'){resetDish();if(state.mode==='orders')pickNext();render();playTone('tap')}
+  });
+  render();
+})();
+</script>
+</body>
+</html>
